@@ -10,6 +10,7 @@ export class Game {
       this.canvas.refreshScreen();
       this.canvas.board.render();
       this.canvas.snake.render();
+      this.canvas.apple.render();
     });
   }
 
@@ -22,6 +23,6 @@ export class Game {
 
     interval = setInterval(() => {
       this.updateFrame(); 
-    }, 600);
+    }, 1000);
   }
 }

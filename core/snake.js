@@ -20,23 +20,53 @@ export class Snake {
     ];
 
     document.addEventListener("keydown", (e) => {
-      this.setDirection(e.keyCode);
+      this.detectDirection(e.keyCode);
     });
   }
 
-  setDirection(keyCode) {
-    switch (keyCode) {
-      case 38:
+  setDirection() {
+    return {
+      up: () => {
+        if (this.direction === directions.DOWN) {
+          return (this.direction = directions.DOWN);
+        }
         this.direction = directions.UP;
-        break;
-      case 37:
-        this.direction = directions.LEFT;
-        break;
-      case 39:
-        this.direction = directions.RIGHT;
-        break;
-      case 40:
+      },
+      down: () => {
+        if (this.direction === directions.UP) {
+          return (this.direction = directions.UP);
+        }
         this.direction = directions.DOWN;
+      },
+      left: () => {
+        if (this.direction === directions.RIGHT) {
+          return (this.direction = directions.RIGHT);
+        }
+        this.direction = directions.LEFT;
+      },
+      right: () => {
+        if (this.direction === directions.LEFT) {
+          return (this.direction = directions.LEFT);
+        }
+        this.direction = directions.RIGHT;
+      },
+    };
+  }
+
+  detectDirection(keyCode) {
+    const direction = this.setDirection();
+    switch (keyCode) {
+      case 38: //up
+        direction.up();
+        break;
+      case 40: //down
+        direction.down();
+        break;
+      case 37: //left
+        direction.left();
+        break;
+      case 39: //right
+        direction.right();
         break;
     }
   }
@@ -44,10 +74,6 @@ export class Snake {
   countNextCell() {
     switch (this.direction) {
       case directions.UP:
-        if (this.direction === directions.DOWN) {
-          this.direction = directions.UP;
-          return;
-        }
         this.headRow--;
         if (this.headRow <= 0) {
           this.headRow = 15;
@@ -81,9 +107,8 @@ export class Snake {
 
   move() {
     const nextCell = this.countNextCell();
-    console.log(nextCell);
-    this.cells.push(nextCell);
-    this.cells.shift();
+    this.cells.unshift(nextCell);
+    this.cells.pop();
   }
 
   render() {

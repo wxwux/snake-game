@@ -1,10 +1,12 @@
 import { Board } from "./board";
 import { Snake } from "./snake";
+import { Apple } from "./apple";
 export class Canvas {
   constructor(container) {
     this.context = container.getContext("2d");
     this.board = new Board(this.context);
     this.snake = new Snake(this.context);
+    this.apple = new Apple(this.context);
   }
 
   refreshScreen() {
