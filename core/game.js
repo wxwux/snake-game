@@ -5,11 +5,23 @@ export class Game {
     this.canvas = new Canvas(container);
   }
 
-  start() {
+  updateFrame() {
     window.requestAnimationFrame(() => {
       this.canvas.refreshScreen();
-      this.canvas.board().render();
-      this.canvas.snake().render();
+      this.canvas.board.render();
+      this.canvas.snake.render();
     });
+  }
+
+  start() {
+    let interval;
+
+    if (typeof interval !== "undefined") {
+      clearInterval(interval);
+    }
+
+    interval = setInterval(() => {
+      this.updateFrame(); 
+    }, 600);
   }
 }

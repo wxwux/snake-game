@@ -15,9 +15,6 @@ export class Cell {
     };
 
     this.type = types[type];
-
-    console.log(types, type, types[type]);
-    
   }
 
   countPosition() {
