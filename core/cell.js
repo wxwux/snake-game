@@ -29,7 +29,7 @@ export class Cell {
     const position = this.countPosition();
     this.ctx.beginPath();
     this.ctx.lineWidth = 1;
-    this.ctx.fillStyle = "#000";
+    this.ctx.fillStyle = "#222f3e";
     this.ctx.rect(position.x, position.y, this.size, this.size);
     this.ctx.fill();
   }
@@ -38,6 +38,7 @@ export class Cell {
     const position = this.countPosition();
     this.ctx.beginPath();
     this.ctx.lineWidth = 1;
+    this.ctx.strokeStyle = "#222f3e";
     this.ctx.rect(position.x, position.y, this.size, this.size);
     this.ctx.stroke();
   }
@@ -45,18 +46,17 @@ export class Cell {
   renderAppleType() {
     const position = this.countPosition();
     this.ctx.beginPath();
-    this.ctx.fillStyle = "#FF0000";
+    this.ctx.fillStyle = "#10ac84";
     this.ctx.rect(position.x, position.y, this.size, this.size);
     this.ctx.fill();
   }
 
-
   render() {
     switch(this.type) {
       case types.SNAKE :
-        this.renderSnakeType();
+        return this.renderSnakeType();
       case types.APPLE :
-        this.renderAppleType();
+        return this.renderAppleType();
       default: 
         this.renderDefaultType();
     }
