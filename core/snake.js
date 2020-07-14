@@ -1,4 +1,5 @@
 import { Cell, types } from "./cell";
+import { emitter, events } from "./emitter";
 
 const directions = {
   UP: "UP",
@@ -7,11 +8,13 @@ const directions = {
   RIGHT: "RIGHT",
 };
 export class Snake {
-  constructor(ctx) {
+  constructor(ctx, { apple }) {
     this.ctx = ctx;
     this.headCol = 8;
     this.headRow = 8;
     this.direction = directions.UP;
+
+    this.apple = apple;
 
     this.cells = [
       { col: this.headCol, row: this.headRow },
@@ -27,6 +30,7 @@ export class Snake {
   setDirection() {
     return {
       up: () => {
+        // snake can't move to the opposite direction
         if (this.direction === directions.DOWN) {
           return (this.direction = directions.DOWN);
         }
@@ -105,14 +109,20 @@ export class Snake {
     };
   }
 
-  move() {
+  generateSnakeBody() {
     const nextCell = this.countNextCell();
     this.cells.unshift(nextCell);
     this.cells.pop();
+
+    if (this.appleWasEaten()) {
+      this.cells.unshift(nextCell);
+    }
+
+    return this.cells;
   }
 
-  render() {
-    this.cells.forEach((snakeCell) => {
+  renderSnakesCells(snake) {
+    snake.forEach((snakeCell) => {
       const cell = new Cell(
         this.ctx,
         {
@@ -123,6 +133,24 @@ export class Snake {
       );
       cell.render();
     });
-    this.move();
+  }
+
+  appleWasEaten() {
+    const applePosition = this.apple.position;
+
+    if (
+      applePosition.col === this.headCol &&
+      applePosition.row === this.headRow
+    ) {
+      emitter.emit(events.SCORE);
+      return true;
+    }
+
+    return false;
+  }
+
+  render() {
+    const snake = this.generateSnakeBody();
+    this.renderSnakesCells(snake);
   }
 }
