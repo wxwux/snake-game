@@ -1,14 +1,20 @@
 import { Cell } from "./cell";
+import { state, objects } from "./state";
 export class Board {
   constructor(ctx) {
     this.ctx = ctx;
-    this.size = 15;
+
+    state.setState(objects.BOARD, {
+      size: 15,
+    });
   }
 
   generateCells() {
+    const { size } = state.getState(objects.BOARD);
     this.cells = [];
-    for (let row = 1; row <= this.size; row++) {
-      for (let col = 1; col <= this.size; col++) {
+
+    for (let row = 1; row <= size; row++) {
+      for (let col = 1; col <= size; col++) {
         const cell = new Cell(this.ctx, { col, row });
         this.cells.push(cell);
       }
@@ -18,7 +24,7 @@ export class Board {
   }
 
   renderCells() {
-    this.generateCells().forEach(cell => {
+    this.generateCells().forEach((cell) => {
       cell.render();
     });
   }

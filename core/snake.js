@@ -1,5 +1,6 @@
 import { Cell, types } from "./cell";
 import { emitter, events } from "./emitter";
+import { state, objects } from "./state";
 
 const directions = {
   UP: "UP",
@@ -10,17 +11,33 @@ const directions = {
 export class Snake {
   constructor(ctx, { apple }) {
     this.ctx = ctx;
-    this.headCol = 8;
-    this.headRow = 8;
+
+    state.setState(objects.SNAKE, {
+      head: {
+        col: 8,
+        row: 8,
+      },
+    });
+
+    state.setState(objects.SNAKE, {
+      position: [
+        { col: 8, row: 8 },
+        { col: 8, row: 9 },
+        { col: 8, row: 10 },
+      ],
+    });
+
+    // this.headCol = 8;
+    // this.headRow = 8;
     this.direction = directions.UP;
 
-    this.apple = apple;
+    // this.apple = apple;
 
-    this.cells = [
-      { col: this.headCol, row: this.headRow },
-      { col: this.headCol, row: 9 },
-      { col: this.headCol, row: 10 },
-    ];
+    // this.cells = [
+    //   { col: this.headCol, row: this.headRow },
+    //   { col: this.headCol, row: 9 },
+    //   { col: this.headCol, row: 10 },
+    // ];
 
     document.addEventListener("keydown", (e) => {
       this.detectDirection(e.keyCode);
@@ -75,12 +92,26 @@ export class Snake {
     }
   }
 
-  countNextCell() {
+  countNextHeadCell() {
+    const { head: snakeHead } = state.getState(objects.SNAKE);
+    const { size: boardSize } = state.getState(objects.BOARD);
+
     switch (this.direction) {
       case directions.UP:
-        this.headRow--;
-        if (this.headRow <= 0) {
-          this.headRow = 15;
+        state.setState(objects.SNAKE, {
+          head: {
+            row: snakeHead.row - 1,
+            col: snakeHead.col,
+          },
+        });
+
+        if (snakeHead.row <= 1) { // todo: переделать что бы ячейки начинались с 0
+          state.setState(objects.SNAKE, {
+            head: {
+              row: boardSize,
+              col: snakeHead.col,
+            },
+          });
         }
         break;
       case directions.DOWN:
@@ -109,20 +140,29 @@ export class Snake {
     };
   }
 
-  generateSnakeBody() {
-    const nextCell = this.countNextCell();
-    this.cells.unshift(nextCell);
-    this.cells.pop();
+  countNextPosition() {
+    this.countNextHeadCell();
+    const { head: snakeHead } = state.getState(objects.SNAKE);
+    const { position: snakePosition } = state.getState(objects.SNAKE);
 
-    if (this.appleWasEaten()) {
-      this.cells.unshift(nextCell);
-    }
+    const newPosition = [snakeHead, ...snakePosition];
 
-    return this.cells;
+    newPosition.pop();
+
+    state.setState(objects.SNAKE, {
+      position: newPosition,
+    });
+
+
+    // if (this.appleWasEaten()) {
+    //   this.cells.unshift(nextCell);
+    // }
   }
 
-  renderSnakesCells(snake) {
-    snake.forEach((snakeCell) => {
+  renderSnakesCells() {
+    const { position: snakePosition } = state.getState(objects.SNAKE);
+
+    snakePosition.forEach((snakeCell) => {
       const cell = new Cell(
         this.ctx,
         {
@@ -150,7 +190,7 @@ export class Snake {
   }
 
   render() {
-    const snake = this.generateSnakeBody();
-    this.renderSnakesCells(snake);
+    this.renderSnakesCells();
+    this.countNextPosition();
   }
 }
