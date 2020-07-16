@@ -9,7 +9,7 @@ const directions = {
   RIGHT: "RIGHT",
 };
 export class Snake {
-  constructor(ctx, { apple }) {
+  constructor(ctx) {
     this.ctx = ctx;
 
     state.setState(objects.SNAKE, {
@@ -27,17 +27,7 @@ export class Snake {
       ],
     });
 
-    // this.headCol = 8;
-    // this.headRow = 8;
     this.direction = directions.UP;
-
-    // this.apple = apple;
-
-    // this.cells = [
-    //   { col: this.headCol, row: this.headRow },
-    //   { col: this.headCol, row: 9 },
-    //   { col: this.headCol, row: 10 },
-    // ];
 
     document.addEventListener("keydown", (e) => {
       this.detectDirection(e.keyCode);
@@ -77,16 +67,16 @@ export class Snake {
   detectDirection(keyCode) {
     const direction = this.setDirection();
     switch (keyCode) {
-      case 38: //up
+      case 38:
         direction.up();
         break;
-      case 40: //down
+      case 40:
         direction.down();
         break;
-      case 37: //left
+      case 37:
         direction.left();
         break;
-      case 39: //right
+      case 39:
         direction.right();
         break;
     }
@@ -167,13 +157,13 @@ export class Snake {
 
     newPosition.pop();
 
+    if (this.appleWasEaten()) {
+      newPosition.unshift(snakeHead);
+    }
+
     state.setState(objects.SNAKE, {
       position: newPosition,
     });
-
-    // if (this.appleWasEaten()) {
-    //   this.cells.unshift(nextCell);
-    // }
   }
 
   renderSnakesCells() {
@@ -193,12 +183,14 @@ export class Snake {
   }
 
   appleWasEaten() {
-    const applePosition = this.apple.position;
+    const { position: applePosition } = state.getState(objects.APPLE);
+    const { head: snakeHead } = state.getState(objects.SNAKE);
 
     if (
-      applePosition.col === this.headCol &&
-      applePosition.row === this.headRow
+      applePosition.col === snakeHead.col &&
+      applePosition.row === snakeHead.row
     ) {
+      console.log('appleWasEaten');
       emitter.emit(events.SCORE);
       return true;
     }
