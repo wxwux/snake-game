@@ -23,6 +23,6 @@ export class Game {
 
     interval = setInterval(() => {
       this.updateFrame(); 
-    }, 1000);
+    }, 100);
   }
 }

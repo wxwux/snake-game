@@ -94,7 +94,9 @@ export class Snake {
 
   countNextHeadCell() {
     const { head: snakeHead } = state.getState(objects.SNAKE);
-    const { size: boardSize } = state.getState(objects.BOARD);
+    const { size: boardSize, edgeCell: boardEdge } = state.getState(
+      objects.BOARD
+    );
     let newHeadPosition = {};
 
     switch (this.direction) {
@@ -103,7 +105,7 @@ export class Snake {
           col: snakeHead.col,
           row: snakeHead.row - 1,
         };
-        if (snakeHead.row <= 1) {
+        if (snakeHead.row <= boardEdge) {
           newHeadPosition = {
             ...newHeadPosition,
             row: boardSize,
@@ -111,57 +113,49 @@ export class Snake {
         }
         break;
       case directions.DOWN:
-        state.setState(objects.SNAKE, {
-          head: {
-            row: snakeHead.row + 1,
-            col: snakeHead.col,
-          },
-        });
+        newHeadPosition = {
+          row: snakeHead.row + 1,
+          col: snakeHead.col,
+        };
 
-        if (snakeHead.row >= 15) {
-          state.setState(objects.SNAKE, {
-            head: {
-              row: 1,
-              col: snakeHead.col,
-            },
-          });
+        if (snakeHead.row >= boardSize) {
+          newHeadPosition = {
+            ...newHeadPosition,
+            row: boardEdge,
+          };
         }
         break;
       case directions.LEFT:
-        state.setState(objects.SNAKE, {
-          head: {
-            row: snakeHead.row,
-            col: snakeHead.col - 1,
-          },
-        });
-        if (snakeHead.col <= 1) {
-          state.setState(objects.SNAKE, {
-            head: {
-              row: snakeHead.row,
-              col: 15,
-            },
-          });
+        newHeadPosition = {
+          row: snakeHead.row,
+          col: snakeHead.col - 1,
+        };
+        if (snakeHead.col <= boardEdge) {
+          newHeadPosition = {
+            ...newHeadPosition,
+            col: boardSize,
+          };
         }
         break;
 
       case directions.RIGHT:
-        state.setState(objects.SNAKE, {
-          head: {
-            row: snakeHead.row,
-            col: snakeHead.col + 1,
-          },
-        });
+        newHeadPosition = {
+          row: snakeHead.row,
+          col: snakeHead.col + 1,
+        };
 
-        if (snakeHead.col >= 15) {
-          state.setState(objects.SNAKE, {
-            head: {
-              row: snakeHead.row,
-              col: 1,
-            },
-          });
+        if (snakeHead.col >= boardSize) {
+          newHeadPosition = {
+            ...newHeadPosition,
+            col: boardEdge,
+          };
         }
         break;
     }
+
+    state.setState(objects.SNAKE, {
+      head: newHeadPosition,
+    });
   }
 
   countNextPosition() {

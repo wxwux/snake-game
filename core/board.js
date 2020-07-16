@@ -7,6 +7,10 @@ export class Board {
     state.setState(objects.BOARD, {
       size: 15,
     });
+
+    state.setState(objects.BOARD, {
+      edgeCell: 1,
+    });
   }
 
   generateCells() {
