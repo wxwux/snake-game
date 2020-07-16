@@ -95,49 +95,73 @@ export class Snake {
   countNextHeadCell() {
     const { head: snakeHead } = state.getState(objects.SNAKE);
     const { size: boardSize } = state.getState(objects.BOARD);
+    let newHeadPosition = {};
 
     switch (this.direction) {
       case directions.UP:
+        newHeadPosition = {
+          col: snakeHead.col,
+          row: snakeHead.row - 1,
+        };
+        if (snakeHead.row <= 1) {
+          newHeadPosition = {
+            ...newHeadPosition,
+            row: boardSize,
+          };
+        }
+        break;
+      case directions.DOWN:
         state.setState(objects.SNAKE, {
           head: {
-            row: snakeHead.row - 1,
+            row: snakeHead.row + 1,
             col: snakeHead.col,
           },
         });
 
-        if (snakeHead.row <= 1) { // todo: переделать что бы ячейки начинались с 0
+        if (snakeHead.row >= 15) {
           state.setState(objects.SNAKE, {
             head: {
-              row: boardSize,
+              row: 1,
               col: snakeHead.col,
             },
           });
         }
         break;
-      case directions.DOWN:
-        this.headRow++;
-        if (this.headRow > 15) {
-          this.headRow = 1;
-        }
-        break;
       case directions.LEFT:
-        this.headCol--;
-        if (this.headCol <= 0) {
-          this.headCol = 15;
+        state.setState(objects.SNAKE, {
+          head: {
+            row: snakeHead.row,
+            col: snakeHead.col - 1,
+          },
+        });
+        if (snakeHead.col <= 1) {
+          state.setState(objects.SNAKE, {
+            head: {
+              row: snakeHead.row,
+              col: 15,
+            },
+          });
         }
         break;
+
       case directions.RIGHT:
-        this.headCol++;
-        if (this.headCol > 15) {
-          this.headCol = 1;
+        state.setState(objects.SNAKE, {
+          head: {
+            row: snakeHead.row,
+            col: snakeHead.col + 1,
+          },
+        });
+
+        if (snakeHead.col >= 15) {
+          state.setState(objects.SNAKE, {
+            head: {
+              row: snakeHead.row,
+              col: 1,
+            },
+          });
         }
         break;
     }
-
-    return {
-      col: this.headCol,
-      row: this.headRow,
-    };
   }
 
   countNextPosition() {
@@ -152,7 +176,6 @@ export class Snake {
     state.setState(objects.SNAKE, {
       position: newPosition,
     });
-
 
     // if (this.appleWasEaten()) {
     //   this.cells.unshift(nextCell);
@@ -190,7 +213,7 @@ export class Snake {
   }
 
   render() {
-    this.renderSnakesCells();
     this.countNextPosition();
+    this.renderSnakesCells();
   }
 }
