@@ -9,7 +9,6 @@ export class Apple {
     this.setRandomPosition();
 
     emitter.on(events.SCORE, () => {
-      console.log('score');
       this.setRandomPosition();
     });
   }
@@ -26,17 +25,14 @@ export class Apple {
     };
 
     const appleInsideTheSnake = snakeCells.some((snakeCell) => {
-      // console.log(snakeCell, applePosition);
       return (
         snakeCell.col === applePosition.col &&
         snakeCell.row === applePosition.row
       );
     });
 
-
     if (appleInsideTheSnake) {
-      console.log('true');
-      this.countRandomPosition();
+      return this.countRandomPosition();
     } else {
       return applePosition;
     }
