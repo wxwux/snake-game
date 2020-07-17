@@ -1,3 +1,4 @@
+import { state, objects } from "./state";
 export const types = {
   DEFAULT: "DEFAULT",
   SNAKE: "SNAKE",
@@ -6,9 +7,10 @@ export const types = {
 };
 
 export class Cell {
-  constructor(ctx, position, type = types.DEFAULT) {
+  constructor(ctx, position = { col: 0, row: 0 }, type = types.DEFAULT) {
     this.ctx = ctx;
     this.size = 18;
+
     this.position = {
       col: position.col,
       row: position.row,
@@ -20,8 +22,8 @@ export class Cell {
   countPosition() {
     const cellSpacing = 3;
     return {
-      x: ( this.size + cellSpacing ) * this.position.col,
-      y: ( this.size + cellSpacing ) * this.position.row,
+      x: (this.size + cellSpacing) * this.position.col,
+      y: (this.size + cellSpacing) * this.position.row,
     };
   }
 
@@ -52,12 +54,12 @@ export class Cell {
   }
 
   render() {
-    switch(this.type) {
-      case types.SNAKE :
+    switch (this.type) {
+      case types.SNAKE:
         return this.renderSnakeType();
-      case types.APPLE :
+      case types.APPLE:
         return this.renderAppleType();
-      default: 
+      default:
         this.renderDefaultType();
     }
   }

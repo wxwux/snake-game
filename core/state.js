@@ -1,7 +1,8 @@
 export const objects = {
   "SNAKE" : "SNAKE",
   "BOARD" : "BOARD",
-  "APPLE" : "APPLE"
+  "APPLE" : "APPLE",
+  "SCORES" : "SCORES"
 }
 
 class State {
@@ -15,7 +16,7 @@ class State {
 
   getState(type) {
     if (type && this.state.hasOwnProperty(type) === false) {
-      throw new Error(`you are trying to get property ${type} which is not set in state`);
+      // throw new Error(`you are trying to get property ${type} which is not set in state`);
     }
 
     return type ? this.state[type] : this.state;

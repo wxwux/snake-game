@@ -1,8 +1,10 @@
 import { Canvas } from "./canvas";
+import { emitter, events } from "./emitter";
 
 export class Game {
   constructor(container) {
     this.canvas = new Canvas(container);
+    this.fps = 100;
   }
 
   updateFrame() {
@@ -11,6 +13,7 @@ export class Game {
       this.canvas.board.render();
       this.canvas.snake.render();
       this.canvas.apple.render();
+      this.canvas.scores.render();
     });
   }
 
@@ -21,8 +24,17 @@ export class Game {
       clearInterval(interval);
     }
 
+    // emitter.on(events.SCORE, () => {
+    //   this.fps -= 100;
+    //   clearInterval(interval);
+
+    //   interval = setInterval(() => {
+    //     this.updateFrame();
+    //   }, this.fps);
+    // });
+
     interval = setInterval(() => {
-      this.updateFrame(); 
-    }, 100);
+      this.updateFrame();
+    }, this.fps);
   }
 }
