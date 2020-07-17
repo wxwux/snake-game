@@ -24,14 +24,14 @@ export class Apple {
       row: getRandomInt(boardEdge, boardSize),
     };
 
-    const appleInsideTheSnake = snakeCells.some((snakeCell) => {
+    const isAppleInsideTheSnake = snakeCells.some((snakeCell) => {
       return (
         snakeCell.col === applePosition.col &&
         snakeCell.row === applePosition.row
       );
     });
 
-    if (appleInsideTheSnake) {
+    if (isAppleInsideTheSnake) {
       return this.countRandomPosition();
     } else {
       return applePosition;
