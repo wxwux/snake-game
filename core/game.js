@@ -4,7 +4,7 @@ import { emitter, events } from "./emitter";
 export class Game {
   constructor(container) {
     this.canvas = new Canvas(container);
-    this.fps = 100;
+    this.fps = 1000;
   }
 
   updateFrame() {
@@ -23,6 +23,11 @@ export class Game {
     if (typeof interval !== "undefined") {
       clearInterval(interval);
     }
+
+    emitter.on(events.LOSE, () => {
+      console.log("loseeeeerr");
+      clearInterval(interval);
+    });
 
     // emitter.on(events.SCORE, () => {
     //   this.fps -= 100;

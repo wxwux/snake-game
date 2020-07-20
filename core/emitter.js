@@ -20,5 +20,6 @@ export class Emitter {
 export const emitter = new Emitter();
 
 export const events = {
-  "SCORE": "SCORE" 
+  "SCORE": "SCORE",
+  "LOSE" : "LOSE"
 }

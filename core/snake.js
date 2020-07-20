@@ -15,15 +15,24 @@ export class Snake {
     state.setState(objects.SNAKE, {
       head: {
         col: 8,
-        row: 8,
+        row: 3,
       },
     });
 
     state.setState(objects.SNAKE, {
       position: [
+        { col: 8, row: 3 },
+        { col: 8, row: 4 },
+        { col: 8, row: 5 },
+        { col: 8, row: 6 },
+        { col: 8, row: 7 },
         { col: 8, row: 8 },
         { col: 8, row: 9 },
         { col: 8, row: 10 },
+        { col: 8, row: 11 },
+        { col: 8, row: 12 },
+        { col: 8, row: 13 },
+        { col: 8, row: 14 },
       ],
     });
 
@@ -143,23 +152,22 @@ export class Snake {
         break;
     }
 
-    state.setState(objects.SNAKE, {
-      head: newHeadPosition,
-    });
+    return newHeadPosition;
   }
 
   countNextPosition() {
-    this.countNextHeadCell();
-    const { head: snakeHead } = state.getState(objects.SNAKE);
+    const snakeHead = this.countNextHeadCell();
     const { position: snakePosition } = state.getState(objects.SNAKE);
 
     const newPosition = [snakeHead, ...snakePosition];
 
-    newPosition.pop();
-
-    if (this.appleWasEaten()) {
-      newPosition.unshift(snakeHead);
+    if (this.appleWasEaten() === false) {
+      newPosition.pop();
+      // newPosition.unshift(snakeHead);
     }
+    state.setState(objects.SNAKE, {
+      head: snakeHead,
+    });
 
     state.setState(objects.SNAKE, {
       position: newPosition,
@@ -190,7 +198,6 @@ export class Snake {
       applePosition.col === snakeHead.col &&
       applePosition.row === snakeHead.row
     ) {
-      console.log('appleWasEaten');
       emitter.emit(events.SCORE);
       return true;
     }
@@ -198,8 +205,29 @@ export class Snake {
     return false;
   }
 
+  checkCollision() {
+    const { head: snakeHead, position: snakeCells } = state.getState(
+      objects.SNAKE
+    );
+    const snakeBody = snakeCells.slice(1);
+
+    const isHeadHitBody = snakeBody.some((bodyCell) => {
+      return bodyCell.col === snakeHead.col && bodyCell.row === snakeHead.row;
+    });
+
+    console.log("============");
+    console.log("sC", snakeCells);
+    console.log("sB", snakeBody);
+    console.log("sH", snakeHead);
+
+    if (isHeadHitBody) {
+      emitter.emit(events.LOSE);
+    }
+  }
+
   render() {
-    this.countNextPosition();
     this.renderSnakesCells();
+    this.checkCollision();
+    this.countNextPosition();
   }
 }
