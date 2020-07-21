@@ -1,6 +1,6 @@
 import { Cell, types } from "./cell";
-import { emitter, events } from "./emitter";
-import { state, objects } from "./state";
+import { emitter, events } from "../core/emitter";
+import { state, objects } from "../core/state";
 
 const directions = {
   UP: "UP",

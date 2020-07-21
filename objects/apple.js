@@ -1,7 +1,7 @@
 import { Cell, types } from "./cell";
-import { getRandomInt } from "./helpers";
-import { emitter, events } from "./emitter";
-import { state, objects } from "./state";
+import { getRandomInt } from "../core/helpers";
+import { emitter, events } from "../core/emitter";
+import { state, objects } from "../core/state";
 export class Apple {
   constructor(ctx) {
     this.ctx = ctx;

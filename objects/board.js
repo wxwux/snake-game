@@ -1,5 +1,5 @@
 import { Cell } from "./cell";
-import { state, objects } from "./state";
+import { state, objects } from "../core/state";
 export class Board {
   constructor(ctx) {
     this.ctx = ctx;

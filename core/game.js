@@ -39,6 +39,7 @@ export class Game {
     // });
 
     interval = setInterval(() => {
+
       this.updateFrame();
     }, this.fps);
   }

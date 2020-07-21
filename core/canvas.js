@@ -1,7 +1,7 @@
-import { Board } from "./board";
-import { Snake } from "./snake";
-import { Apple } from "./apple";
-import { Scores } from "./scores";
+import { Board } from "../objects/board";
+import { Snake } from "../objects/snake";
+import { Apple } from "../objects/apple";
+import { Scores } from "../objects/scores";
 export class Canvas {
   constructor(container) {
     this.context = container.getContext("2d");

@@ -1,4 +1,3 @@
-import { state, objects } from "./state";
 export const types = {
   DEFAULT: "DEFAULT",
   SNAKE: "SNAKE",
