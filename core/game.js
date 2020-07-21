@@ -1,5 +1,7 @@
 import { Canvas } from "./canvas";
 import { emitter, events } from "./emitter";
+import { UserInput } from "./userInput";
+import { state } from "./state";
 
 export class Game {
   constructor(container) {
@@ -7,18 +9,20 @@ export class Game {
     this.fps = 1000;
   }
 
-  updateFrame() {
+  renderFrame(state) {
     window.requestAnimationFrame(() => {
       this.canvas.refreshScreen();
-      this.canvas.board.render();
-      this.canvas.snake.render();
-      this.canvas.apple.render();
-      this.canvas.scores.render();
+      this.canvas.board.render(state);
+      this.canvas.snake.render(state);
+      this.canvas.apple.render(state);
+      this.canvas.scores.render(state);
     });
   }
 
   start() {
     let interval;
+    const userInput = new UserInput();
+    const gameState = state.getState();
 
     if (typeof interval !== "undefined") {
       clearInterval(interval);
@@ -39,8 +43,10 @@ export class Game {
     // });
 
     interval = setInterval(() => {
-
-      this.updateFrame();
+      // console.log(userInput);
+      // console.log(gameState); 
+      // const state = state.update(userInput, gameState);
+      this.renderFrame(state)
     }, this.fps);
   }
 }

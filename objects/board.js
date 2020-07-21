@@ -1,17 +1,9 @@
 import { Cell } from "./cell";
-import { state, objects } from "../core/state";
+import { state } from "../core/state";
+import { objects } from "./index";
 export class Board {
   constructor(ctx) {
     this.ctx = ctx;
-
-    state.setState(objects.BOARD, {
-      size: 15,
-      edgeCell: 1,
-      cell: {
-        size: 18,
-        spacing: 3,
-      },
-    });
   }
 
   generateCells() {

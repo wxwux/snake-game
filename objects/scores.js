@@ -1,13 +1,12 @@
-import { state, objects } from "../core/state";
+import { state } from "../core/state";
 import { emitter, events } from "../core/emitter";
+import { objects } from "./index";
 export class Scores {
   constructor(ctx) {
     this.ctx = ctx;
     this.position = {
       x: this.countXPosition(),
     };
-
-    state.setState(objects.SCORES, { scores: 0 });
 
     emitter.on(events.SCORE, () => {
       const { scores } = state.getState(objects.SCORES);

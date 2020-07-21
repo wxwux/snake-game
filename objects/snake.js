@@ -1,6 +1,7 @@
 import { Cell, types } from "./cell";
 import { emitter, events } from "../core/emitter";
-import { state, objects } from "../core/state";
+import { state } from "../core/state";
+import { objects } from "./index";
 
 const directions = {
   UP: "UP",
@@ -11,30 +12,6 @@ const directions = {
 export class Snake {
   constructor(ctx) {
     this.ctx = ctx;
-
-    state.setState(objects.SNAKE, {
-      head: {
-        col: 8,
-        row: 3,
-      },
-    });
-
-    state.setState(objects.SNAKE, {
-      position: [
-        { col: 8, row: 3 },
-        { col: 8, row: 4 },
-        { col: 8, row: 5 },
-        { col: 8, row: 6 },
-        { col: 8, row: 7 },
-        { col: 8, row: 8 },
-        { col: 8, row: 9 },
-        { col: 8, row: 10 },
-        { col: 8, row: 11 },
-        { col: 8, row: 12 },
-        { col: 8, row: 13 },
-        { col: 8, row: 14 },
-      ],
-    });
 
     this.direction = directions.UP;
 
