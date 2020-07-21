@@ -4,7 +4,7 @@ import { getRandomInt } from "../core/helpers";
 
 export class Updater {
   constructor(state) {
-    this.state = state
+    this.state = state;
   }
 
   update({ direction }) {
@@ -49,63 +49,28 @@ export class Updater {
     const { size: boardSize, edgeCell: boardEdge } = this.state.getState(
       objects.BOARD
     );
-    let newHeadPosition = {};
-
-    switch (direction) {
-      case directions.UP:
-        newHeadPosition = {
-          col: snakeHead.col,
-          row: snakeHead.row - 1,
-        };
-        if (snakeHead.row <= boardEdge) {
-          newHeadPosition = {
-            ...newHeadPosition,
-            row: boardSize,
-          };
-        }
-        break;
-      case directions.DOWN:
-        newHeadPosition = {
-          row: snakeHead.row + 1,
-          col: snakeHead.col,
-        };
-
-        if (snakeHead.row >= boardSize) {
-          newHeadPosition = {
-            ...newHeadPosition,
-            row: boardEdge,
-          };
-        }
-        break;
-      case directions.LEFT:
-        newHeadPosition = {
-          row: snakeHead.row,
-          col: snakeHead.col - 1,
-        };
-        if (snakeHead.col <= boardEdge) {
-          newHeadPosition = {
-            ...newHeadPosition,
-            col: boardSize,
-          };
-        }
-        break;
-
-      case directions.RIGHT:
-        newHeadPosition = {
-          row: snakeHead.row,
-          col: snakeHead.col + 1,
-        };
-
-        if (snakeHead.col >= boardSize) {
-          newHeadPosition = {
-            ...newHeadPosition,
-            col: boardEdge,
-          };
-        }
-        break;
-    }
-
-    return newHeadPosition;
+    return {
+      [directions.UP]: () => {
+        return snakeHead.row <= boardEdge
+          ? { col: snakeHead.col, row: boardSize }
+          : { col: snakeHead.col, row: snakeHead.row - 1 };
+      },
+      [directions.DOWN]: () => {
+        return snakeHead.row >= boardSize
+          ? { row: snakeHead.row, row: boardEdge }
+          : { row: snakeHead.row + 1, col: snakeHead.col };
+      },
+      [directions.RIGHT]: () => {
+        return snakeHead.col >= boardSize
+          ? { row: snakeHead.row, col: boardEdge }
+          : { row: snakeHead.row, col: snakeHead.col + 1 };
+      },
+      [directions.LEFT]: () => {
+        return snakeHead.col <= boardEdge
+          ? { row: snakeHead.row, col: boardSize }
+          : { row: snakeHead.row, col: snakeHead.col - 1 };
+      },
+    }[direction]();
   }
 
   increaseScores() {
@@ -122,7 +87,7 @@ export class Updater {
       applePosition.row === snakeHead.row
     ) {
       this.setNewApplePosition();
-      this.increaseScores()
+      this.increaseScores();
       return true;
     }
 
