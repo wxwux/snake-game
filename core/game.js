@@ -2,11 +2,12 @@ import { Canvas } from "./canvas";
 import { emitter, events } from "./emitter";
 import { UserInput } from "./userInput";
 import { state } from "./state";
+import { Updater } from "./updater";
 
 export class Game {
   constructor(container) {
     this.canvas = new Canvas(container);
-    this.fps = 1000;
+    this.fps = 70;
   }
 
   renderFrame(state) {
@@ -22,7 +23,7 @@ export class Game {
   start() {
     let interval;
     const userInput = new UserInput();
-    const gameState = state.getState();
+    const updater = new Updater();
 
     if (typeof interval !== "undefined") {
       clearInterval(interval);
@@ -43,10 +44,9 @@ export class Game {
     // });
 
     interval = setInterval(() => {
-      // console.log(userInput);
-      // console.log(gameState); 
-      // const state = state.update(userInput, gameState);
-      this.renderFrame(state)
+      const gameState = state.getState();
+      const newState = updater.update(userInput, gameState);
+      this.renderFrame(newState);
     }, this.fps);
   }
 }

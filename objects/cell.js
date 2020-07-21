@@ -1,3 +1,5 @@
+import { state } from "../core/state";
+import { objects } from "./index";
 export const types = {
   DEFAULT: "DEFAULT",
   SNAKE: "SNAKE",
@@ -8,7 +10,9 @@ export const types = {
 export class Cell {
   constructor(ctx, position = { col: 0, row: 0 }, type = types.DEFAULT) {
     this.ctx = ctx;
-    this.size = 18;
+
+    this.size = state.getState(objects.BOARD).cell.size;
+    this.spacing = state.getState(objects.BOARD).cell.spacing
 
     this.position = {
       col: position.col,
@@ -19,10 +23,9 @@ export class Cell {
   }
 
   countPosition() {
-    const cellSpacing = 3;
     return {
-      x: (this.size + cellSpacing) * this.position.col,
-      y: (this.size + cellSpacing) * this.position.row,
+      x: (this.size + this.spacing) * this.position.col,
+      y: (this.size + this.spacing) * this.position.row,
     };
   }
 

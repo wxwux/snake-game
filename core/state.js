@@ -16,8 +16,8 @@ export const initialState = {
     size: 15,
     edgeCell: 1,
     cell: {
-      size: 18,
-      spacing: 3,
+      size: 36,
+      spacing: 6,
     },
   },
   [objects.APPLE]: {
@@ -47,9 +47,9 @@ class State {
       );
     }
 
-    return type ? this.state[type] : this.state;
+    return type ? this.state[type] : this;
   }
-  update(userInput, state) {}
+
 }
 
 export const state = new State(initialState);
