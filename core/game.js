@@ -22,8 +22,8 @@ export class Game {
 
   start() {
     let interval;
+    const updater = new Updater(state);
     const userInput = new UserInput();
-    const updater = new Updater();
 
     if (typeof interval !== "undefined") {
       clearInterval(interval);
@@ -44,8 +44,7 @@ export class Game {
     // });
 
     interval = setInterval(() => {
-      const gameState = state.getState();
-      const newState = updater.update(userInput, gameState);
+      const newState = updater.update(userInput);
       this.renderFrame(newState);
     }, this.fps);
   }

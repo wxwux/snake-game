@@ -1,18 +1,52 @@
 import { objects } from "../objects";
 import { directions } from "./userInput";
-import { emitter, events } from "./emitter";
+import { getRandomInt } from "../core/helpers";
 
 export class Updater {
-  update({ direction }, state) {
-    const newHeadPosition = this.calcNextHeadCell(direction, state);
-    this.calcNextPosition(newHeadPosition, state);
-
-    return state;
+  constructor(state) {
+    this.state = state
   }
 
-  calcNextHeadCell(direction, state) {
-    const { head: snakeHead } = state.getState(objects.SNAKE);
-    const { size: boardSize, edgeCell: boardEdge } = state.getState(
+  update({ direction }) {
+    const newHeadPosition = this.calcNextHeadCell(direction);
+    this.calcNextPosition(newHeadPosition);
+
+    return this.state;
+  }
+
+  calcRandomPosition() {
+    const { size: boardSize, edgeCell: boardEdge } = this.state.getState(
+      objects.BOARD
+    );
+    const { position: snakeCells } = this.state.getState(objects.SNAKE);
+
+    const applePosition = {
+      col: getRandomInt(boardEdge, boardSize),
+      row: getRandomInt(boardEdge, boardSize),
+    };
+
+    const isAppleInsideTheSnake = snakeCells.some((snakeCell) => {
+      return (
+        snakeCell.col === applePosition.col &&
+        snakeCell.row === applePosition.row
+      );
+    });
+
+    if (isAppleInsideTheSnake) {
+      return this.calcRandomPosition();
+    } else {
+      return applePosition;
+    }
+  }
+
+  setNewApplePosition() {
+    const position = this.calcRandomPosition();
+    this.state.setState(objects.APPLE, { position });
+  }
+
+  calcNextHeadCell(direction) {
+    const { head: snakeHead } = this.state.getState(objects.SNAKE);
+    const { size: boardSize, edgeCell: boardEdge } = this.state.getState(
       objects.BOARD
     );
     let newHeadPosition = {};
@@ -74,37 +108,42 @@ export class Updater {
     return newHeadPosition;
   }
 
-  appleWasEaten(state) {
-    const { position: applePosition } = state.getState(objects.APPLE);
-    const { head: snakeHead } = state.getState(objects.SNAKE);
+  increaseScores() {
+    const { scores } = this.state.getState(objects.SCORES);
+    this.state.setState(objects.SCORES, { scores: scores + 1 });
+  }
+
+  appleWasEaten() {
+    const { position: applePosition } = this.state.getState(objects.APPLE);
+    const { head: snakeHead } = this.state.getState(objects.SNAKE);
 
     if (
       applePosition.col === snakeHead.col &&
       applePosition.row === snakeHead.row
     ) {
-      emitter.emit(events.SCORE);
+      this.setNewApplePosition();
+      this.increaseScores()
       return true;
     }
 
     return false;
   }
 
-  calcNextPosition(snakeHead, state) {
-    const { position: snakePosition } = state.getState(objects.SNAKE);
+  calcNextPosition(snakeHead) {
+    const { position: snakePosition } = this.state.getState(objects.SNAKE);
 
     const newPosition = [snakeHead, ...snakePosition];
 
-    state.setState(objects.SNAKE, {
+    this.state.setState(objects.SNAKE, {
       head: snakeHead,
     });
 
-    state.setState(objects.SNAKE, {
+    this.state.setState(objects.SNAKE, {
       position: newPosition,
     });
 
-    if (this.appleWasEaten(snakeHead, state) === false) {
+    if (this.appleWasEaten() === false) {
       newPosition.pop();
-      // newPosition.unshift(snakeHead);
     }
   }
 }

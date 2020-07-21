@@ -22,8 +22,8 @@ export const initialState = {
   },
   [objects.APPLE]: {
     position: {
-      col: 0,
-      row: 0
+      col: 3,
+      row: 3
     }
   },
   [objects.SCORES] : {
