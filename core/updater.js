@@ -49,6 +49,7 @@ export class Updater {
     const { size: boardSize, edgeCell: boardEdge } = this.state.getState(
       objects.BOARD
     );
+
     return {
       [directions.UP]: () => {
         return snakeHead.row <= boardEdge
@@ -57,8 +58,8 @@ export class Updater {
       },
       [directions.DOWN]: () => {
         return snakeHead.row >= boardSize
-          ? { row: snakeHead.row, row: boardEdge }
-          : { row: snakeHead.row + 1, col: snakeHead.col };
+          ? { col: snakeHead.col, row: boardEdge }
+          : { col: snakeHead.col, row: snakeHead.row + 1 };
       },
       [directions.RIGHT]: () => {
         return snakeHead.col >= boardSize
