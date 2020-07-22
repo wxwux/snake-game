@@ -8,8 +8,12 @@ export const initialState = {
     },
     position: [
       { col: 8, row: 8 },
+      { col: 6, row: 6 },
       { col: 8, row: 9 },
       { col: 8, row: 10 },
+      { col: 8, row: 11 },
+      { col: 8, row: 12 },
+      { col: 8, row: 13 },
     ],
   },
   [objects.BOARD]: {
