@@ -10,7 +10,7 @@ export class UserInput {
     this.direction = directions.UP;
 
     document.addEventListener("keydown", (e) => {
-      this.detectDirection(e.keyCode);
+      this.detectDirection(e.key);
     });
   }
 
@@ -44,21 +44,21 @@ export class UserInput {
     };
   }
 
-  detectDirection(keyCode) {
+  detectDirection(key) {
     const direction = this.setDirection();
-    switch (keyCode) {
-      case 38:
+    switch (key) {
+      case "ArrowUp":
         direction.up();
         break;
-      case 40:
+      case "ArrowDown":
         direction.down();
         break;
-      case 37:
+      case "ArrowLeft":
         direction.left();
         break;
-      case 39:
+      case "ArrowRight":
         direction.right();
-        break;
+        break
     }
   }
 }
