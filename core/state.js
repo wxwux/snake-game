@@ -4,16 +4,12 @@ export const initialState = {
   [objects.SNAKE]: {
     head: {
       col: 8,
-      row: 8,
+      row: 6,
     },
     position: [
+      { col: 8, row: 6 },
+      { col: 8, row: 7 },
       { col: 8, row: 8 },
-      { col: 6, row: 6 },
-      { col: 8, row: 9 },
-      { col: 8, row: 10 },
-      { col: 8, row: 11 },
-      { col: 8, row: 12 },
-      { col: 8, row: 13 },
     ],
   },
   [objects.BOARD]: {
@@ -31,12 +27,14 @@ export const initialState = {
     }
   },
   [objects.SCORES] : {
-    scores: 0
+    scores: 0,
+    lives: 3
   }
 };
 
 class State {
   constructor(initialState = {}) {
+    this.originalState = {...initialState};
     this.state = initialState;
   }
 
@@ -47,13 +45,22 @@ class State {
   getState(type) {
     if (type && this.state.hasOwnProperty(type) === false) {
       throw new Error(
-        `you are trying to get property ${type} which is not set in state`
+        `you are trying to get property ${type} which is not set in the state`
       );
     }
 
     return type ? this.state[type] : this;
   }
 
+  resetState(type) {
+    if (type && this.state.hasOwnProperty(type) === false) {
+      throw new Error(
+        `you are trying to reset property ${type} which is not set in the state`
+      );
+    }
+
+    this.state[type] = this.originalState[type];
+  }
 }
 
 export const state = new State(initialState);

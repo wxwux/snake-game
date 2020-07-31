@@ -1,3 +1,5 @@
+import { emitter, events } from "./emitter";
+
 export const directions = {
   UP: "UP",
   DOWN: "DOWN",
@@ -10,8 +12,28 @@ export class UserInput {
     this.direction = directions.UP;
 
     document.addEventListener("keydown", (e) => {
-      this.detectDirection(e.key);
+      this.detectDirection(e.code);
     });
+
+    emitter.on(events.LOSE, () => {
+      this.direction = directions.UP;
+      document.addEventListener("keypress", this.spaceHandler);
+    });
+
+    emitter.on(events.GAME_OVER, () => {
+      document.removeEventListener("keypress", this.spaceHandler);
+    });
+
+    emitter.on(events.RESTART, () => {
+      document.removeEventListener("keypress", this.spaceHandler);
+    });
+
+  }
+
+  spaceHandler(e) {
+    if (e.code === "Space") {
+      emitter.emit(events.RESTART);
+    }
   }
 
   setDirection() {
@@ -58,7 +80,7 @@ export class UserInput {
         break;
       case "ArrowRight":
         direction.right();
-        break
+        break;
     }
   }
 }

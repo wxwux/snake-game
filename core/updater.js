@@ -13,7 +13,6 @@ export class Updater {
     this.calcNextPosition(newHeadPosition);
     this.checkCollision(direction);
 
-
     return this.state;
   }
 
@@ -92,6 +91,7 @@ export class Updater {
     ) {
       this.setNewApplePosition();
       this.increaseScores();
+      emitter.emit(events.SCORE);
       return true;
     }
 
@@ -99,21 +99,34 @@ export class Updater {
   }
 
   checkCollision(direction) {
-    const { position: snakeCells } = this.state.getState(
-      objects.SNAKE
-    );
+    const { position: snakeCells } = this.state.getState(objects.SNAKE);
 
     const nextHeadCell = this.calcNextHeadCell(direction);
 
-    const isHeadHitBody = snakeCells.some((bodyCell, ndx) => {
+    const hasHeadHitBody = snakeCells.some((bodyCell, ndx) => {
       return ndx > 0
         ? bodyCell.col === nextHeadCell.col && bodyCell.row === nextHeadCell.row
         : false;
     });
 
-    if (isHeadHitBody) {
+    if (hasHeadHitBody) {
+      this.decreaseLives();
       emitter.emit(events.LOSE);
+
+      if (this.checkTheGameIsOver()) {
+        emitter.emit(events.GAME_OVER);
+      }
     }
+  }
+
+  checkTheGameIsOver() {
+    const { lives } = this.state.getState(objects.SCORES);
+    return lives === 0;
+  }
+
+  decreaseLives() {
+    const { lives } = this.state.getState(objects.SCORES);
+    this.state.setState(objects.SCORES, { lives: lives - 1 });
   }
 
   calcNextPosition(snakeHead) {

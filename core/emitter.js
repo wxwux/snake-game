@@ -21,5 +21,7 @@ export const emitter = new Emitter();
 
 export const events = {
   "SCORE": "SCORE",
-  "LOSE" : "LOSE"
+  "LOSE" : "LOSE",
+  "RESTART": "RESTART",
+  "GAME_OVER" : "GAME_OVER"
 }

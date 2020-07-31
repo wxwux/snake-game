@@ -3,11 +3,17 @@ import { emitter, events } from "./emitter";
 import { UserInput } from "./userInput";
 import { state } from "./state";
 import { Updater } from "./updater";
+import { objects } from "../objects";
+
+const defaultFps = 300;
 
 export class Game {
   constructor(container) {
     this.canvas = new Canvas(container);
-    this.fps = 70;
+    this.fps = defaultFps;
+    this.interval = null;
+    this.updater = new Updater(state);
+    this.userInput = new UserInput();
   }
 
   renderFrame(state) {
@@ -20,32 +26,36 @@ export class Game {
     });
   }
 
-  start() {
-    let interval;
-    const updater = new Updater(state);
-    const userInput = new UserInput();
-
-    if (typeof interval !== "undefined") {
-      clearInterval(interval);
+  renderScreen() {
+    if (this.interval) {
+      clearInterval(this.interval);
     }
 
-    emitter.on(events.LOSE, () => {
-      console.log("loseeeeerr");
-      clearInterval(interval);
-    });
-
-    // emitter.on(events.SCORE, () => {
-    //   this.fps -= 100;
-    //   clearInterval(interval);
-
-    //   interval = setInterval(() => {
-    //     this.updateFrame();
-    //   }, this.fps);
-    // });
-
-    interval = setInterval(() => {
-      const newState = updater.update(userInput);
+    this.interval = setInterval(() => {
+      const newState = this.updater.update(this.userInput);
       this.renderFrame(newState);
     }, this.fps);
+  }
+
+  start() {
+    emitter.on(events.SCORE, () => {
+      if (this.fps > 50) {
+        this.fps -= 10;
+      }
+
+      this.renderScreen();
+    });
+
+    emitter.on(events.LOSE, () => {
+      clearInterval(this.interval);
+    });
+
+    emitter.on(events.RESTART, () => {
+      this.fps = defaultFps;
+      state.resetState(objects.SNAKE);
+      this.renderScreen();
+    });
+
+    this.renderScreen();
   }
 }
