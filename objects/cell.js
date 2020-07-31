@@ -3,8 +3,7 @@ import { objects } from "./index";
 export const types = {
   DEFAULT: "DEFAULT",
   SNAKE: "SNAKE",
-  APPLE: "APPLE",
-  BOMB: "BOMB",
+  APPLE: "APPLE"
 };
 
 export class Cell {
@@ -42,9 +41,10 @@ export class Cell {
     const position = this.countPosition();
     this.ctx.beginPath();
     this.ctx.lineWidth = 1;
+    this.ctx.fillStyle = "#fff";
+    this.ctx.fillRect(position.x, position.y, this.size, this.size);
     this.ctx.strokeStyle = "#222f3e";
-    this.ctx.rect(position.x, position.y, this.size, this.size);
-    this.ctx.stroke();
+    this.ctx.strokeRect(position.x, position.y, this.size, this.size);
   }
 
   renderAppleType() {
@@ -62,7 +62,7 @@ export class Cell {
       case types.APPLE:
         return this.renderAppleType();
       default:
-        this.renderDefaultType();
+        return this.renderDefaultType();
     }
   }
 }

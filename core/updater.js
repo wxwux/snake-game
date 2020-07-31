@@ -1,6 +1,6 @@
 import { objects } from "../objects";
 import { directions } from "./userInput";
-import { getRandomInt } from "../core/helpers";
+import { getRandomInt } from "./helpers";
 import { emitter, events } from "./emitter";
 
 export class Updater {
@@ -12,6 +12,7 @@ export class Updater {
     const newHeadPosition = this.calcNextHeadCell(direction);
     this.calcNextPosition(newHeadPosition);
     this.checkCollision(direction);
+
 
     return this.state;
   }
@@ -98,28 +99,22 @@ export class Updater {
   }
 
   checkCollision(direction) {
-    const { head: snakeHead, position: snakeCells } = this.state.getState(
+    const { position: snakeCells } = this.state.getState(
       objects.SNAKE
     );
 
     const nextHeadCell = this.calcNextHeadCell(direction);
 
     const isHeadHitBody = snakeCells.some((bodyCell, ndx) => {
-      return ndx > 0 
+      return ndx > 0
         ? bodyCell.col === nextHeadCell.col && bodyCell.row === nextHeadCell.row
-        : false
+        : false;
     });
-
-    // console.log("============");
-    // console.log("sC", snakeCells);
-    // console.log("sB", snakeBody);
-    // console.log("sH", snakeHead);
 
     if (isHeadHitBody) {
       emitter.emit(events.LOSE);
     }
   }
-
 
   calcNextPosition(snakeHead) {
     const { position: snakePosition } = this.state.getState(objects.SNAKE);
