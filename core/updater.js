@@ -10,7 +10,7 @@ export class Updater {
 
   update({ direction }) {
     const newHeadPosition = this.calcNextHeadCell(direction);
-    this.calcNextPosition(newHeadPosition);
+    this.moveSnakeToTheNextPosition(newHeadPosition);
     this.checkCollision(direction);
 
     return this.state;
@@ -129,7 +129,7 @@ export class Updater {
     this.state.setState(objects.SCORES, { lives: lives - 1 });
   }
 
-  calcNextPosition(snakeHead) {
+  moveSnakeToTheNextPosition(snakeHead) {
     const { position: snakePosition } = this.state.getState(objects.SNAKE);
 
     const newPosition = [snakeHead, ...snakePosition];
